@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Page Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <button onclick="GetUserInfo()">Get User Info</button><br />
+    <button onclick="Logout()">Logout</button><br />
+    <p>User</p><input type="text" id="user"></input><br />
+    <p>Password</p><input type="password" id="pass"></input><br />
+    <button onclick="Login()">LOGIN</button><br />
+    <p>Receiver</p><input type="text" id="Receiver"></input><br />
+    <p>Amount in Cents</p><input type="text" id="amount_cents"></input><br />
+    <button onclick="TopUp()">Top Up</button><br />
+    <div id="LiveChat"></div>
+
+    //getlog
+    //getinfo
+    //createVTM
+    //acceptVTM
+    //addPayment
+
+</body>
+
+<script>
+    var infourl;
+
+    var loginurl = "https://main.demo.nanopay.net/api/users/login"
+
+    var _id;
+
+
+    function GetUserInfo() {
+    infourl  = 'https://main.demo.nanopay.net/api/users/userData?access_token=' + _id;
+        $.get(infourl)
+            .done(function(data) {
+                console.log("Data Loaded: " + data.email);
+                for (var key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        console.log(key + " -> " + data[key]);
+                    }
+                }
+            });
+    }
+
+    function Logout(){
+console.log('https://main.demo.nanopay.net/api/users/logout?access_token=' + _id);
+      $.post('https://main.demo.nanopay.net/api/users/logout?access_token=' + _id);
+    }
+
+    function Login() {
+        var login = new Object();
+        var _email = document.getElementById("user").value;
+        var _password = document.getElementById("pass").value;
+        var _realm = "mintchip"
+        login.email = "adevuyst@gmail.com";
+        login.password = "ucash123";
+        login.realm = "mintchip";
+        var FML = JSON.stringify(login)
+        console.log(login.email);
+        console.log(login.password);
+        console.log(login.realm);
+        console.log(FML);
+
+        $.post(loginurl, {email: _email, password: _password, realm: _realm}, function(data){console.log(data); _id = data.id});
+
+    }
+
+    function TopUp(){
+      var TopUpUrl = 'https://main.demo.nanopay.net/api/mintchip/topup?access_token=' + _id;
+      console.log(TopUpUrl);
+
+      //var _receiver = document.getElementById("receiver").value;
+      var _amount_cents = document.getElementById("amount_cents").value;
+
+        $.post(TopUpUrl, {fromAccountId:"58cf101169dd08560fe2e460", fromAmount: _amount_cents},function(data){console.log(data)});
+
+    }
+</script>
+
+</html>
